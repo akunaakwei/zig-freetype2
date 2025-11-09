@@ -244,7 +244,6 @@ pub fn build(b: *std.Build) void {
 
     const flags = .{
         "-DFT2_BUILD_LIBRARY",
-        "-DFT_CONFIG_OPTION_USE_HARFBUZZ",
     };
 
     const freetype = b.addLibrary(.{
