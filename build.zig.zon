@@ -16,9 +16,9 @@
             .hash = "brotli-1.2.0-KPf9F2MVAADiZY1lCWWlksYMm-kKlP2PmVoGcBowe_kS",
             .lazy = true,
         },
-        .z = .{
-            .url = "https://github.com/akunaakwei/zig-z/archive/90f9f5b5892f248426f86ec87d2ad210017b4fbb.tar.gz",
-            .hash = "z-1.3.1-bMk6UWILAACBq0z3H3a5qZNyCx0O7BVePzsBnlIv4zVr",
+        .miniz = .{
+            .url = "https://github.com/akunaakwei/zig-miniz/archive/590e680e6d80b66eff258073ea0bcbbbbe75c317.zip",
+            .hash = "miniz-3.1.0-0VR2HbYUAADcyREPqtywcywp_2HImnMYYk8EispopYRW",
             .lazy = true,
         },
         .png = .{

@@ -91,13 +91,13 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
         });
     };
-    const maybe_z_dep = z_dep: {
+    const maybe_miniz_dep = miniz_dep: {
         if (ft_config_option_use_zlib == null)
-            break :z_dep null;
+            break :miniz_dep null;
         if (!ft_config_option_use_zlib.?)
-            break :z_dep null;
+            break :miniz_dep null;
 
-        break :z_dep b.lazyDependency("z", .{
+        break :miniz_dep b.lazyDependency("miniz", .{
             .target = target,
             .optimize = optimize,
         });
@@ -244,6 +244,7 @@ pub fn build(b: *std.Build) void {
 
     const flags = .{
         "-DFT2_BUILD_LIBRARY",
+        "-Wno-incompatible-function-pointer-types",
     };
 
     const freetype = b.addLibrary(.{
@@ -259,9 +260,9 @@ pub fn build(b: *std.Build) void {
         const dec = brotli_dep.artifact("brotlidec");
         freetype.linkLibrary(dec);
     }
-    if (maybe_z_dep) |z_dep| {
-        const z = z_dep.artifact("z");
-        freetype.linkLibrary(z);
+    if (maybe_miniz_dep) |z_dep| {
+        const miniz = z_dep.artifact("miniz");
+        freetype.linkLibrary(miniz);
     }
     if (maybe_png_dep) |png_dep| {
         const png = png_dep.artifact("png");
