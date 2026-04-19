@@ -31,11 +31,11 @@
             .hash = "bzip2-1.0.8-x1Hi7kQMAAAz9_SWVfRJGaFvgu7e3yFMXYv1mu_uJ8gf",
             .lazy = true,
         },
-        .harfbuzz = .{
-            .url = "https://github.com/akunaakwei/zig-harfbuzz/archive/e8231c66e2118cd7f509d23e4b21ed33ce54025c.tar.gz",
-            .hash = "harfbuzz-12.1.0-bK6F49AOAAC6iA16sPBJJzICamrR0CAGf31dk3OD-eGM",
-            .lazy = true,
-        },
+        // .harfbuzz = .{
+        //     .url = "https://github.com/akunaakwei/zig-harfbuzz/archive/7415bcc392ad6ac06b1273017d144f4799564342.tar.gz",
+        //     .hash = "harfbuzz-12.1.0-bK6F49AOAADuG2ClPIkAxbZU1G2cVWJV-_dwAkxVQ9f6",
+        //     .lazy = true,
+        // },
     },
     .paths = .{
         "build.zig",
