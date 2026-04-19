@@ -154,7 +154,7 @@ pub fn build(b: *std.Build) void {
     ftoption_in_cmd.addArg("-e");
     ftoption_in_cmd.addArg("s|#define \\(AF_.*\\)|#undef \\1|g");
     ftoption_in_cmd.addFileArg(freetype_dep.path("devel/ftoption.h"));
-    const ftoption_in = ftoption_in_cmd.captureStdOut();
+    const ftoption_in = ftoption_in_cmd.captureStdOut(.{});
 
     const ftoption = b.addConfigHeader(.{
         .style = .{ .autoconf_undef = ftoption_in },
@@ -246,54 +246,55 @@ pub fn build(b: *std.Build) void {
         "-DFT2_BUILD_LIBRARY",
     };
 
-    const freetype = b.addLibrary(.{
-        .name = "freetype",
-        .root_module = b.createModule(.{
-            .target = target,
-            .optimize = optimize,
-            .link_libc = true,
-        }),
-        .linkage = linkage,
+    const freetype_mod = b.createModule(.{
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
     });
     if (maybe_brotli_dep) |brotli_dep| {
         const dec = brotli_dep.artifact("brotlidec");
-        freetype.linkLibrary(dec);
+        freetype_mod.linkLibrary(dec);
     }
     if (maybe_z_dep) |z_dep| {
         const z = z_dep.artifact("z");
-        freetype.linkLibrary(z);
+        freetype_mod.linkLibrary(z);
     }
     if (maybe_png_dep) |png_dep| {
         const png = png_dep.artifact("png");
-        freetype.linkLibrary(png);
+        freetype_mod.linkLibrary(png);
     }
     if (maybe_bzip2_dep) |bzip2_dep| {
         const bz2 = bzip2_dep.artifact("bz2");
-        freetype.linkLibrary(bz2);
+        freetype_mod.linkLibrary(bz2);
     }
     if (maybe_harfbuzz_dep) |harfbuzz_dep| {
         const hb = harfbuzz_dep.artifact("harfbuzz");
-        freetype.linkLibrary(hb);
+        freetype_mod.linkLibrary(hb);
     }
 
-    freetype.addWin32ResourceFile(.{ .file = freetype_dep.path("src/base/ftver.rc") });
-    freetype.addConfigHeader(ftoption);
-    freetype.addIncludePath(freetype_dep.path("include"));
-    freetype.addCSourceFiles(.{
+    freetype_mod.addWin32ResourceFile(.{ .file = freetype_dep.path("src/base/ftver.rc") });
+    freetype_mod.addConfigHeader(ftoption);
+    freetype_mod.addIncludePath(freetype_dep.path("include"));
+    freetype_mod.addCSourceFiles(.{
         .root = freetype_dep.path("src"),
         .files = &sources,
         .flags = &flags,
     });
-    freetype.addCSourceFile(.{ .file = ftsystem, .flags = &flags });
-    freetype.addCSourceFile(.{ .file = ftdebug, .flags = &flags });
+    freetype_mod.addCSourceFile(.{ .file = ftsystem, .flags = &flags });
+    freetype_mod.addCSourceFile(.{ .file = ftdebug, .flags = &flags });
     if (optimize == .Debug) {
-        freetype.addCSourceFiles(.{
+        freetype_mod.addCSourceFiles(.{
             .root = freetype_dep.path("src"),
             .files = &debug_sources,
             .flags = &flags,
         });
     }
 
+    const freetype = b.addLibrary(.{
+        .name = "freetype",
+        .root_module = freetype_mod,
+        .linkage = linkage,
+    });
     freetype.installHeadersDirectory(freetype_dep.path("include"), ".", .{
         .exclude_extensions = &.{"freetype/internal"},
     });
